@@ -8,12 +8,21 @@ export const API = createApi({
     baseUrl: "http://localhost:5000/",
   }),
 
+  tagTypes: ["Posts"],
   endpoints: (builder) => ({
-    getPosts: builder.query<string, string>({ query: () => "posts" }),
+    getPosts: builder.query<Post[], string>({ query: () => "posts", providesTags: ["Posts"] }),
+    newPost: builder.mutation<Post, Post>({
+      query: (post) => ({
+        url: "posts",
+        method: "POST",
+        body: post,
+      }),
+      invalidatesTags: ["Posts"]
+    }),
   }),
 });
 
 // ORIGINAL URL: http://localhost:5000/
 // END POINT QUERY: http://localhost:5000/posts
 
-export const {useGetPostsQuery} = API;
+export const { useGetPostsQuery, useNewPostMutation } = API;
